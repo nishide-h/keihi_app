@@ -7,16 +7,8 @@
     }
 
     var csv = [];
-    var resp = [];
-    var query = [];
-    var app_id = kintone.app.getRelatedRecordsTargetAppId('');
-    var date = new Date();
-    date.setMonth(date.getMonth() -1);
-    var requestParam = {
-      'app': kintone.app.getId(),
-      'query': kintone.app.getQuery()
-    };
-    
+    var app = kintone.app.getId();
+        
     if (document.getElementById('btn_csv_output') !== null) {
       return;
     }
@@ -33,8 +25,10 @@
     */
 
     btnCSVOutput.onclick = function() {
+      csv = [];
       getMakeCSV();
       downloadCSV(csv);
+      // 出力したらCSV出力フラグをONにする
     };
 
     kintone.app.getHeaderMenuSpaceElement().appendChild(btnCSVOutput);
@@ -44,33 +38,28 @@
         return '"' + (value? value.replace(/"/g, '""'): '') + '"';
       };
 
-      resp = request();
-      //kintone.api(kintone.api.url('/k/v1/records', true), 'GET', requestParam, function(resp) {
-        var row = [];
-        for (var i=0; i<resp.records.length; i++) {
-          var record = resp.records[i];
-          row = [];
-          //row.push(escapeStr(record['_tax_checked'].value));
-          //row.push(escapeStr(record['_tax_type'].value));
-          //row.push(escapeStr(record['_csv_output'].value));
-          //row.push(escapeStr(record['_payment_due_date'].value));
-          row.push(escapeStr(record['_name'].value));
-          row.push(escapeStr(record['_expense'].value));
-          row.push(escapeStr(record['_date'].value));
-          row.push(escapeStr(record['_detail'].value));
-          row.push(escapeStr(record['_price'].value));
-          csv.push(row);
-        }
-      //});
+      var resp = request();
+      var row = [];
+      for (var i=0; i<resp.records.length; i++) {
+        var record = resp.records[i];
+        row = [];
+        //row.push(escapeStr(record['_tax_checked'].value));
+        //row.push(escapeStr(record['_tax_type'].value));
+        //row.push(escapeStr(record['_csv_output'].value));
+        //row.push(escapeStr(record['_payment_due_date'].value));
+        row.push(escapeStr(record['_name'].value));
+        row.push(escapeStr(record['_expense'].value));
+        row.push(escapeStr(record['_date'].value));
+        row.push(escapeStr(record['_detail'].value));
+        row.push(escapeStr(record['_price'].value));
+        csv.push(row);
+      }
     }
 
-    var requestParam = {
-      'app': kintone.app.getId(),
-      'query': kintone.app.getQuery()
-    };
     function request() {
-      var app = kintone.app.getId();
-      var query = kintone.app.getQuery();
+      //税理士チェック済み＆日付が前月＆CSV出力フラグがOFFのものを対象とする
+      var query = "_tax_checked in (\"済\") and _date = LAST_MONTH() and _csv_output not in (\"済\") order by _date asc"
+
       var appUrl = kintone.api.url('/k/v1/records') + '?app=' + app + '&query=' + query;
       var xmlHttp = new XMLHttpRequest();
       xmlHttp.open('GET', appUrl, false);
