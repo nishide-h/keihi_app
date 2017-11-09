@@ -44,7 +44,8 @@
         return '"' + (value? value.replace(/"/g, '""'): '') + '"';
       };
 
-      kintone.api(kintone.api.url('/k/v1/records', true), 'GET', requestParam, function(resp) {
+      resp = request();
+      //kintone.api(kintone.api.url('/k/v1/records', true), 'GET', requestParam, function(resp) {
         var row = [];
         for (var i=0; i<resp.records.length; i++) {
           var record = resp.records[i];
@@ -60,7 +61,24 @@
           row.push(escapeStr(record['_price'].value));
           csv.push(row);
         }
-      });
+      //});
+    }
+
+    var requestParam = {
+      'app': kintone.app.getId(),
+      'query': kintone.app.getQuery()
+    };
+    function request() {
+      var app = kintone.app.getId();
+      var query = kintone.app.getQuery();
+      var appUrl = kintone.api.url('/k/v1/records') + '?app=' + app + '&query=' + query;
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open('GET', appUrl, false);
+      xmlHttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      xmlHttp.send(null);
+
+      var respdata = JSON.parse(xmlHttp.responseText);
+      return respdata;
     }
     
     function downloadCSV(csv) {
