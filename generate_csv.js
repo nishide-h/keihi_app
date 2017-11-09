@@ -28,7 +28,6 @@
       csv = [];
       getMakeCSV();
       downloadCSV(csv);
-      // 出力したらCSV出力フラグをONにする
     };
 
     kintone.app.getHeaderMenuSpaceElement().appendChild(btnCSVOutput);
@@ -53,6 +52,8 @@
         row.push(escapeStr(record['_detail'].value));
         row.push(escapeStr(record['_price'].value));
         csv.push(row);
+
+        setCSVOutput(record['\$id'].value);
       }
     }
 
@@ -103,6 +104,24 @@
       else if (mm < 10) { mm = '0' + mm; }
       String();
       return '' + YYYY + MM + DD + hh + mm;
+    }
+
+    function setCSVOutput(record_id) {
+      var body = {
+        "app": app,
+        "id": Number(record_id),
+        "record": {
+          "_csv_output": {
+            "value": ["済"]
+          }
+        }
+      };
+      
+      kintone.api(kintone.api.url('/k/v1/record', true), 'PUT', body, function(resp) {
+        //console.log(resp);
+      }, function(error) {
+        console.log(error);
+      });
     }
   });
 })();
