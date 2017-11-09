@@ -73,15 +73,25 @@
     
     function downloadCSV(csv) {
       var filename = '未払計上仕訳_' + getTimeStamp() + '.csv';
+
+      var str2array = function(str) {
+        var array = [], i, il=str.length;
+        for (i=0; i<il; i++) {
+          array.push(str.charCodeAt(i));
+        }
+        return array;
+      };
+
       var csvbuf = csv.map(function(e){return e.join(',')}).join('\r\n');
-      var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-      var blob = new Blob([bom, csvbuf], {type: 'text/csv'});
+      var array = str2array(csvbuf);
+      var sjis_array = Encoding.convert(array, "SJIS", "UNICODE");
+      var uint8_array = new Uint8Array(sjis_array);
+      var blob = new Blob([uint8_array], { type: 'text/csv'});
       
       if (window.navigator.msSaveBlob) {
         window.navigator.msSaveBlob(blob, filename);
       } else {
-        var url = (window.URL || window.webkitURL);
-        var blobUrl = url.createObjectURL(blob);
+        var blobUrl = (window.URL || window.webkitURL).createObjectURL(blob);
         var e = document.createEvent('MouseEvents');
         e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
         var a = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
