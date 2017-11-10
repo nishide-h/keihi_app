@@ -34,6 +34,8 @@
       csv = [];
       getMakeCSV();
       downloadCSV(csv);
+
+      location.reload(true);
     };
     kintone.app.getHeaderMenuSpaceElement().appendChild(btnCSVOutput);
     
