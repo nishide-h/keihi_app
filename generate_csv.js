@@ -31,47 +31,20 @@
     btnCSVOutput.id = 'btn_csv_output';
     btnCSVOutput.innerHTML = 'CSV出力';
     btnCSVOutput.onclick = function() {
-      request()
-        .then(getMakeCSV)
-        .then(downloadCSV)
-        .then(function() {
-          location.reload(true);
-        })
-        .catch(function(event) {
-          alert(event);
-        });
+      csv = [];
+      getMakeCSV();
+      downloadCSV(csv);
+
+      location.reload(true);
     };
     kintone.app.getHeaderMenuSpaceElement().appendChild(btnCSVOutput);
-
-    function request() {
-      //税理士チェック済み＆日付が前月＆CSV出力フラグがOFFのものを対象とする
-      var query = "_tax_checked in (\"済\") and _date = LAST_MONTH() and _csv_output not in (\"済\")";
-      query += " order by _date asc";
-        
-      var params = {
-        'app': app,
-        'query': query
-      };
-
-      return kintone.api('/k/v1/records', 'GET', params).then(function(resp) {
-        if (resp.records[0] == null) {
-          throw new Error("出力する値が取得できませんでした。");
-          return;
-        }
-
-        return resp;
-      }, function(resp) {
-        throw new Error("出力する値が取得できませんでした。)");
-        return;
-      });
-    }
-
-    function getMakeCSV(resp) {
+    
+    function getMakeCSV() {
       var escapeStr = function(value) {
         return '"' + (value? value.replace(/"/g, '""'): '') + '"';
       };
 
-      var csv = [];
+      var resp = request();
       var row = [];
       for (var i=0; i<resp.records.length; i++) {
         var record = resp.records[i];
@@ -137,12 +110,26 @@
 
         setCSVOutput(record['\$id'].value);
       }
+    }
 
-      return csv;
+    function request() {
+      //税理士チェック済み＆日付が前月＆CSV出力フラグがOFFのものを対象とする
+      var query = "_tax_checked in (\"済\") and _date = LAST_MONTH() and _csv_output not in (\"済\")";
+      query += " order by _date asc";
+
+      var appUrl = kintone.api.url('/k/v1/records') + '?app=' + app + '&query=' + query;
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open('GET', appUrl, false);
+      xmlHttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      xmlHttp.send(null);
+
+      var respdata = JSON.parse(xmlHttp.responseText);
+      return respdata;
     }
 
     function downloadCSV(csv) {
       var filename = '未払計上仕訳_' + getTimeStamp() + '.csv';
+
       var str2array = function(str) {
         var array = [], i, il=str.length;
         for (i=0; i<il; i++) {
