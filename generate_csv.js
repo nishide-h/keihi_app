@@ -65,12 +65,12 @@
         return;
       });
     }
+    
+    var escapeStr = function(value) {
+      return '"' + (value? value.replace(/"/g, '""'): '') + '"';
+    };
 
     function getMakeCSV(resp) {
-      var escapeStr = function(value) {
-        return '"' + (value? value.replace(/"/g, '""'): '') + '"';
-      };
-
       var csv = [];
       var row = [];
       for (var i=0; i<resp.records.length; i++) {
