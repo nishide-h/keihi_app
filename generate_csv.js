@@ -89,7 +89,7 @@
         row.push("");   // 5 入力日付
         //--------------------------借方
         row.push(escapeStr(expenseCode)); // 6 借方・科目
-        if (expense == "外注費") {              // 7 補助コード
+        if (expense === "外注費") {              // 7 補助コード
           row.push(13);
         } else {
           row.push(""); 
@@ -109,7 +109,7 @@
         row.push("");  // 16 税額
         row.push(escapeStr(outline));     // 17 摘要
         //--------------------------貸方
-        if (record._name.value == "小口現金") {  // 18 貸方・科目（小口現金の場合は1118）
+        if (record._name.value === "小口現金") {  // 18 貸方・科目（小口現金の場合は1118）
           row.push("1118");
         } else {
           row.push("2114");
