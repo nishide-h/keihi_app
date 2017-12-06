@@ -35,8 +35,8 @@
         .then(function() {
           location.reload(true);
         })
-        .catch(function(event) {
-          alert(event);
+        .catch(function(error) {
+          alert(error.message);
         });
     }, false);
     kintone.app.getHeaderMenuSpaceElement().appendChild(btnCSVOutput);
