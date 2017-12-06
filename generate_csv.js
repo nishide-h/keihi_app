@@ -30,7 +30,7 @@
     btnCSVOutput.innerHTML = 'CSV出力';
     btnCSVOutput.addEventListener('click', function() {
       request()
-        .then(getMakeCSV)
+        .then(buildCSV)
         .then(downloadCSV)
         .then(function() {
           location.reload(true);
@@ -70,7 +70,7 @@
     return '"' + (value? value.replace(/"/g, '""'): '') + '"';
   };
 
-  function getMakeCSV(resp) {
+  function buildCSV(resp) {
     var csv = [];
     var row = [];
     for (var i=0; i<resp.records.length; i++) {
