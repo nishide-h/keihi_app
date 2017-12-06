@@ -97,7 +97,7 @@
         row.push("");   // 8 部門コード
         row.push("");   // 9 取引先コード
         row.push("");   // 10 取引先名
-        if (genkaCode == undefined) { // 11 税種別
+        if (!genkaCode) { // 11 税種別
           row.push(60); // 原価ではない経費は60
         } else {
           row.push(50); // 原価は50
@@ -115,14 +115,14 @@
           row.push("2114");
         }
         var payer_code = payers[payer];
-        if (payer_code == undefined ) {
+        if (!payer_code) {
           payer_code = "";
         }
         row.push(payer_code); // 19 補助コード
         row.push(""); // 20 部門コード
         row.push(""); // 21 取引先コード
         row.push(""); // 22 取引先名
-        if (genkaCode == undefined) { // 23 税種別
+        if (!genkaCode) { // 23 税種別
           row.push(60); // 原価ではない経費は60
         } else {
           row.push(50); // 原価は50
