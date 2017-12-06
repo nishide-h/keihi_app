@@ -59,7 +59,10 @@
 
       return resp;
     }, function(resp) {
-      throw new Error("出力する値が取得できませんでした。)");
+      var error = "レコード取得時にエラーが発生しました。"
+      if (resp.message !== undefined) {
+        throw new Error(error += '\n' + resp.message);
+      }
     });
   }
 
