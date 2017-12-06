@@ -75,16 +75,16 @@
       var row = [];
       for (var i=0; i<resp.records.length; i++) {
         var record = resp.records[i];
-        var expenseValue = record['_expense'].value;
+        var expenseValue = record._expense.value;
         var expense = expenseValue.slice(0, expenseValue.indexOf(":"));
         var expenseCode = expenseValue.slice(expenseValue.indexOf(":") + 1);
         var genkaCode = genka[expense];
-        var payer = record['_name'].value;
-        var outline = record['_payee'].value + ":" + record['_detail'].value;
+        var payer = record._name.value;
+        var outline = record._payee.value + ":" + record._detail.value;
         row = [];
         row.push("1");  // 1処理区分
         row.push("");   // 2 データID
-        row.push(escapeStr(record['_date'].value)); // 3 伝票日付
+        row.push(escapeStr(record._date.value)); // 3 伝票日付
         row.push("");   // 4 伝票番号
         row.push("");   // 5 入力日付
         //--------------------------借方
@@ -105,11 +105,11 @@
         row.push(1);  // 12 事業区分
         row.push(8);  // 13 税率 税率8%
         row.push(1);  // 14 内外別記 内税表記は1
-        row.push(record['_price'].value); // 15 金額
+        row.push(record._price.value); // 15 金額
         row.push("");  // 16 税額
         row.push(escapeStr(outline));     // 17 摘要
         //--------------------------貸方
-        if (record['_name'].value == "小口現金") {  // 18 貸方・科目（小口現金の場合は1118）
+        if (record._name.value == "小口現金") {  // 18 貸方・科目（小口現金の場合は1118）
           row.push("1118");
         } else {
           row.push("2114");
@@ -130,12 +130,12 @@
         row.push(1);  // 24 事業区分
         row.push(8);  // 25 税率 税率8%
         row.push(1);  // 26 内外別記 内税表記は1
-        row.push(escapeStr(record['_price'].value));  // 27 金額
+        row.push(escapeStr(record._price.value));  // 27 金額
         row.push("");  // 28 税額
         row.push(escapeStr(outline));  // 29 摘要
         csv.push(row);
 
-        setCSVOutput(record['\$id'].value);
+        setCSVOutput(record.$id.value);
       }
 
       return csv;
