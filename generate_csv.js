@@ -75,9 +75,9 @@
       var row = [];
       for (var i=0; i<resp.records.length; i++) {
         var record = resp.records[i];
-        var expenseValue = record._expense.value;
-        var expense = expenseValue.slice(0, expenseValue.indexOf(":"));
-        var expenseCode = expenseValue.slice(expenseValue.indexOf(":") + 1);
+        var expenseArray = record._expense.value.split(':');
+        var expense = expenseArray[0];
+        var expenseCode = expenseArray[1];
         var genkaCode = genka[expense];
         var payer = record._name.value;
         var outline = record._payee.value + ":" + record._detail.value;
