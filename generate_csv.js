@@ -55,13 +55,11 @@
     return kintone.api('/k/v1/records', 'GET', params).then(function(resp) {
       if (resp.records[0] == null) {
         throw new Error("出力する値が取得できませんでした。");
-        return;
       }
 
       return resp;
     }, function(resp) {
       throw new Error("出力する値が取得できませんでした。)");
-      return;
     });
   }
 
