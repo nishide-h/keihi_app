@@ -114,11 +114,11 @@
         } else {
           row.push("2114");
         }
-        var payer_code = payers[payer];
-        if (!payer_code) {
-          payer_code = "";
+        var payerCode = payers[payer];
+        if (!payerCode) {
+          payerCode = "";
         }
-        row.push(payer_code); // 19 補助コード
+        row.push(payerCode); // 19 補助コード
         row.push(""); // 20 部門コード
         row.push(""); // 21 取引先コード
         row.push(""); // 22 取引先名
@@ -153,9 +153,9 @@
 
       var csvbuf = csv.map(function(e){return e.join(',')}).join('\r\n');
       var array = str2array(csvbuf);
-      var sjis_array = Encoding.convert(array, "SJIS", "UNICODE");
-      var uint8_array = new Uint8Array(sjis_array);
-      var blob = new Blob([uint8_array], { type: 'text/csv'});
+      var sjisArray = Encoding.convert(array, "SJIS", "UNICODE");
+      var uint8Array = new Uint8Array(sjisArray);
+      var blob = new Blob([uint8Array], { type: 'text/csv'});
       
       if (window.navigator.msSaveBlob) {
         window.navigator.msSaveBlob(blob, filename);
@@ -185,10 +185,10 @@
       return '' + YYYY + MM + DD + hh + mm;
     }
 
-    function setCSVOutput(record_id) {
+    function setCSVOutput(recordId) {
       var body = {
         "app": app,
-        "id": Number(record_id),
+        "id": Number(recordId),
         "record": {
           "_csv_output": {
             "value": ["済"]
