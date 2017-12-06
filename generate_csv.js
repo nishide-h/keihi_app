@@ -30,7 +30,7 @@
     var btnCSVOutput = document.createElement('button');
     btnCSVOutput.id = 'btn_csv_output';
     btnCSVOutput.innerHTML = 'CSV出力';
-    btnCSVOutput.onclick = function() {
+    btnCSVOutput.addEventListener('click', function() {
       request()
         .then(getMakeCSV)
         .then(downloadCSV)
@@ -40,7 +40,7 @@
         .catch(function(event) {
           alert(event);
         });
-    };
+    }, false);
     kintone.app.getHeaderMenuSpaceElement().appendChild(btnCSVOutput);
 
     function request() {
